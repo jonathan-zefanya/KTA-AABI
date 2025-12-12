@@ -180,8 +180,7 @@
         right:{{ $cfg['qr']['right'] }}cm;
         bottom:{{ $cfg['qr']['bottom'] }}cm;
         width:{{ $cfg['qr']['width'] }}cm;
-        height:{{ $cfg['qr']['height'] }}cm;
-        border:0.05cm solid #000;
+        height:{{ $cfg['qr']['height'] }}cm;    
         padding:0.05cm;
         background:#fff;
         display:flex;

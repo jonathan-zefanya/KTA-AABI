@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminCompanyController;
 use App\Http\Controllers\AdminSettingController;
 use App\Http\Controllers\MembershipCardController;
 use App\Http\Controllers\PublicMemberListController;
+use App\Http\Controllers\CompanyPlantController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', action: function () {
@@ -76,6 +77,15 @@ Route::middleware(['web','auth','user.active'])->group(function () {
     Route::get('/invoices/{invoice}/pdf', [\App\Http\Controllers\InvoiceController::class,'downloadPdf'])->name('invoices.pdf');
     Route::post('/invoices/{invoice}/upload-proof', [\App\Http\Controllers\InvoiceController::class,'uploadProof'])->name('invoices.uploadProof');
     Route::post('/invoices/{invoice}/select-bank', [\App\Http\Controllers\InvoiceController::class,'selectBank'])->name('invoices.selectBank');
+    
+    // Company plants (AMP & CBP)
+    Route::get('/company/plants', [\App\Http\Controllers\CompanyPlantController::class,'index'])->name('company.plants.index');
+    Route::get('/company/plants/create', [\App\Http\Controllers\CompanyPlantController::class,'create'])->name('company.plants.create');
+    Route::post('/company/plants', [\App\Http\Controllers\CompanyPlantController::class,'store'])->name('company.plants.store');
+    Route::get('/company/plants/{plant}/edit', [\App\Http\Controllers\CompanyPlantController::class,'edit'])->name('company.plants.edit');
+    Route::put('/company/plants/{plant}', [\App\Http\Controllers\CompanyPlantController::class,'update'])->name('company.plants.update');
+    Route::delete('/company/plants/{plant}', [\App\Http\Controllers\CompanyPlantController::class,'destroy'])->name('company.plants.destroy');
+    
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 

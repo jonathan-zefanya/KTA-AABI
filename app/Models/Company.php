@@ -22,8 +22,6 @@ class Company extends Model
         'phone',
         'website',
         'address',
-    'asphalt_mixing_plant_address',
-    'concrete_batching_plant_address',
     'postal_code',
     'province_code','province_name','city_code','city_name',
     'photo_pjbu_path','photo_pjbu_thumb_path','npwp_bu_path','akte_bu_path','nib_file_path','ktp_pjbu_path','npwp_pjbu_path'
@@ -32,5 +30,20 @@ class Company extends Model
     public function users()
     {
         return $this->belongsToMany(User::class)->withTimestamps();
+    }
+
+    public function plants()
+    {
+        return $this->hasMany(CompanyPlant::class);
+    }
+
+    public function ampAddresses()
+    {
+        return $this->plants()->where('type', 'AMP');
+    }
+
+    public function cbpAddresses()
+    {
+        return $this->plants()->where('type', 'CBP');
     }
 }
