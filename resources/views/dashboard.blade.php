@@ -198,6 +198,7 @@
           <a href="{{ route('pembayaran') }}" class="btn btn-sm btn-outline-primary">Lihat Pembayaran</a>
           <a href="{{ route('kta') }}" class="btn btn-sm btn-outline-primary">Kartu Anggota</a>
           <a href="{{ route('kta.renew.form') }}" class="btn btn-sm btn-primary">Perpanjang KTA</a>
+          <a href="{{ route('company.plants.index') }}" class="btn btn-sm btn-outline-secondary">Kelola Lokasi Pabrik</a>
       </div>
   </div>
 @endif

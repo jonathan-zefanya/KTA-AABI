@@ -12,12 +12,38 @@
         $bgPath = public_path($templatePath);
     }
 
+    // Get back template path (kta_belakang.jpg)
+    $backTemplatePath = public_path('img/kta_belakang.jpg');
+    
+    // Check if file exists, if not check in storage
+    if (!file_exists($backTemplatePath)) {
+        $backTemplatePath = storage_path('app/public/img/kta_belakang.jpg');
+    }
+    
+    // Check if back template is set in settings, otherwise use default
+    $backTemplatePathSetting = \App\Models\Setting::getValue('kta_back_template_path', null);
+    if ($backTemplatePathSetting) {
+        if (str_starts_with($backTemplatePathSetting, 'uploads/')) {
+            $backTemplatePath = storage_path('app/public/' . $backTemplatePathSetting);
+        } else {
+            $backTemplatePath = public_path($backTemplatePathSetting);
+        }
+    }
+
     // Convert background image to base64 for PDF embedding
     $bgBase64 = '';
     if ($bgPath && file_exists($bgPath)) {
         $imageData = file_get_contents($bgPath);
         $mime = mime_content_type($bgPath) ?: 'image/png';
         $bgBase64 = 'data:' . $mime . ';base64,' . base64_encode($imageData);
+    }
+
+    // Convert back template to base64
+    $backBase64 = '';
+    if ($backTemplatePath && file_exists($backTemplatePath)) {
+        $imageData = file_get_contents($backTemplatePath);
+        $mime = mime_content_type($backTemplatePath) ?: 'image/jpeg';
+        $backBase64 = 'data:' . $mime . ';base64,' . base64_encode($imageData);
     }
 
     // Get layout configuration
@@ -46,6 +72,10 @@
             $photoBase64 = 'data:' . $pMime . ';base64,' . base64_encode($pData);
         }
     }
+
+    // Get plant addresses
+    $ampAddresses = $company ? $company->ampAddresses()->get() : [];
+    $cbpAddresses = $company ? $company->cbpAddresses()->get() : [];
 @endphp
 <!DOCTYPE html>
 <html lang="id">
@@ -64,17 +94,19 @@
         @endif
     }
     /* Make PDF exactly the required physical size (cm) */
-    @page { size: 29.7cm 21.28cm; margin: 0; }
+    @page { size: 29.7cm 21.28cm; margin: 0; page-break-after: always; }
 
     .page{
         position:relative;
         width:29.7cm;
         height:21.28cm;
         margin:0 auto;
+        page-break-after: avoid;
         @if($isPreview)
         box-shadow: 0 20px 60px rgba(0,0,0,0.15);
         border-radius: 8px;
         overflow: hidden;
+        margin-bottom: 20px;
         @endif
     }
     .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
@@ -83,89 +115,79 @@
     /* Nomor Anggota */
     .member-box{
         position:absolute;
-        left:{{ $cfg['member_box']['left'] }}cm;
-        top:{{ $cfg['member_box']['top'] }}cm;
-        padding:0.15cm 0.3cm;
+        left:0.8cm;
+        top:1.2cm;
+        width:4.5cm;
+        padding:0.3cm;
         font-weight:700;
-        font-size:{{ $cfg['member_box']['fontSize'] }}px;
-        letter-spacing:0.05cm;
-        min-width:2.5cm;
+        font-size:16px;
+        letter-spacing:1px;
         text-align:center;
+        background:#fff;
+        z-index:10;
     }
 
-    /* Judul */
+    /* Judul KARTU TANDA ANGGOTA */
     .title{
         position:absolute;
-        top:{{ $cfg['title']['top'] }}cm;
-        left:{{ $cfg['title']['left'] }}cm;
+        top:2.4cm;
+        left:50%;
+        transform:translateX(-50%);
         font-weight:800;
-        font-size:{{ $cfg['title']['fontSize'] }}px;
+        font-size:14px;
         text-decoration:underline;
+        z-index:10;
     }
 
-    /* Data perusahaan */
+    /* Data perusahaan - table format */
     .meta{
         position:absolute;
-        left:{{ $cfg['meta']['left'] }}cm;
-        top:{{ $cfg['meta']['top'] }}cm;
-        width:{{ $cfg['meta']['width'] }}cm;
-        font-size:{{ $cfg['meta']['fontSize'] }}px;
+        left:5.8cm;
+        top:2.8cm;
+        width:23cm;
+        font-size:11px;
+        line-height:1.3;
+        z-index:5;
     }
     .meta table {
         border-collapse: collapse;
-        width: 130%;
+        width: 100%;
         border: none;
     }
     .meta table td {
         border: none;
-        padding: 0.2cm 0.15cm;
+        padding: 0.25cm 0.2cm;
         vertical-align: top;
-        line-height: 1.4;
+        line-height: 1.5;
     }
     .meta table td:first-child {
         font-weight: 700;
-        width: auto;
+        width: 4cm;
         white-space: nowrap;
-        padding-right: 0.2cm;
     }
     .meta table td:nth-child(2) {
-        width: 0.3cm;
+        width: 0.4cm;
         text-align: center;
-        padding: 0.2cm 0.1cm;
     }
     .meta table td:last-child {
         word-break: break-word;
-    }
-
-    /* Bar masa berlaku */
-    .expiry{
-        position:absolute;
-        left:{{ $cfg['expiry']['left'] }}cm;
-        top:{{ $cfg['expiry']['top'] }}cm;
-        display:inline-block;
-        padding:0.15cm 0.3cm;
-        border:1px solid #000;
-        background:#fff;
-        font-weight:700;
-        font-size:{{ $cfg['expiry']['fontSize'] }}px;
-        line-height:1.3;
-        text-align:center;
-        max-width:12cm;
+        font-size:10px;
     }
 
     /* Pas Foto */
     .photo{
         position:absolute;
-        left:{{ $cfg['photo']['left'] }}cm;
-        top:{{ $cfg['photo']['top'] }}cm;
-        width:{{ $cfg['photo']['width'] }}cm;
-        height:{{ $cfg['photo']['height'] }}cm;
-        border:0.08cm solid #000;
+        left:1cm;
+        top:3.5cm;
+        width:3.8cm;
+        height:5.2cm;
+        border:2px solid #000;
         overflow:hidden;
         background:#eee;
         display:flex;
         align-items:center;
         justify-content:center;
+        z-index:10;
     }
     .photo img{
         width:100%;
@@ -174,24 +196,53 @@
         object-position:center;
     }
 
-    /* QR Code */
+    /* Photo Label */
+    .photo-label{
+        position:absolute;
+        left:1cm;
+        top:8.8cm;
+        width:3.8cm;
+        font-size:9px;
+        font-weight:600;
+        text-align:center;
+        line-height:1.3;
+        z-index:10;
+    }
+
+    /* QR Code - Left side */
     .qr{
         position:absolute;
-        right:{{ $cfg['qr']['right'] }}cm;
-        bottom:{{ $cfg['qr']['bottom'] }}cm;
-        width:{{ $cfg['qr']['width'] }}cm;
-        height:{{ $cfg['qr']['height'] }}cm;    
-        padding:0.05cm;
+        left:1cm;
+        top:10.2cm;
+        width:3.8cm;
+        height:4.2cm;
+        padding:0.2cm;
         background:#fff;
         display:flex;
         align-items:center;
         justify-content:center;
-        z-index:100;
+        z-index:10;
     }
     .qr img, .qr svg{
         max-width:100%;
         max-height:100%;
         object-fit:contain;
+    }
+
+    /* Bar masa berlaku */
+    .expiry{
+        position:absolute;
+        left:5.8cm;
+        top:13.5cm;
+        width:18cm;
+        padding:0.3cm 0.4cm;
+        border:2px solid #000;
+        background:#fff;
+        font-weight:700;
+        font-size:10px;
+        line-height:1.4;
+        text-align:center;
+        z-index:10;
     }
 </style>
 
@@ -251,29 +302,67 @@
         </div>
         @endif
 
-        <!-- Masa Berlaku -->
-        <div class="expiry">
-            BERLAKU SAMPAI DENGAN TANGGAL {{ optional($user->membership_card_expires_at)->format('d F Y') }}
-        </div>
-
         <!-- Pas Foto -->
-        @php($photo = $user->membership_photo_path ?? ($company->photo_pjbu_path ?? null))
         @if($photoBase64)
             <div class="photo">
                 <img src="{{ $photoBase64 }}" alt="Foto">
             </div>
         @endif
 
-        <!-- QR Code for Validation -->
-        @if(isset($qrPng) || isset($qrSvg))
+        <!-- Photo Label -->
+        <div class="photo-label">FOTO<br>Stempel DPP</div>
+
+        <!-- QR Code -->
         <div class="qr">
             @if(isset($qrPng) && !empty($qrPng))
                 <img src="data:image/png;base64,{{ $qrPng }}" alt="QR">
             @elseif(isset($qrSvg) && !empty($qrSvg))
                 {!! $qrSvg !!}
+            @else
+                <div style="font-size:9px;font-weight:600;color:#999;">QR Code</div>
             @endif
         </div>
-        @endif
+
+        <!-- Masa Berlaku -->
+        <div class="expiry">
+            BERLAKU SAMPAI DENGAN TANGGAL<br>{{ optional($user->membership_card_expires_at)->format('d F Y') }}
+        </div>
+    </div>
+</div>
+
+<!-- HALAMAN KEDUA - DAFTAR AMP & CBP -->
+<div class="page">
+    @if($backBase64)
+        <img class="bg" src="{{ $backBase64 }}" alt="bg-back">
+    @endif
+    <div class="layer">
+        <!-- Lokasi AMP Section -->
+        <div style="position:absolute;top:4.5cm;left:1.5cm;right:1.5cm;">
+            <div style="font-weight:700;font-size:13px;margin-bottom:0.3cm;">Lokasi <i>Asphalt Mixing Plant</i></div>
+            @if($ampAddresses->count())
+                @foreach($ampAddresses as $idx => $plant)
+                <div style="font-size:11px;margin:0.15cm 0;line-height:1.4;">
+                    <span style="font-weight:600;">{{ $idx + 1 }}.</span> {{ $plant->address }}
+                </div>
+                @endforeach
+            @else
+                <div style="font-size:11px;color:#999;margin:0.15cm 0;">Tidak ada data AMP terdaftar</div>
+            @endif
+        </div>
+
+        <!-- Lokasi CBP Section -->
+        <div style="position:absolute;top:9cm;left:1.5cm;right:1.5cm;">
+            <div style="font-weight:700;font-size:13px;margin-bottom:0.3cm;">Lokasi <i>Concrete Batching Plant</i></div>
+            @if($cbpAddresses->count())
+                @foreach($cbpAddresses as $idx => $plant)
+                <div style="font-size:11px;margin:0.15cm 0;line-height:1.4;">
+                    <span style="font-weight:600;">{{ $idx + 1 }}.</span> {{ $plant->address }}
+                </div>
+                @endforeach
+            @else
+                <div style="font-size:11px;color:#999;margin:0.15cm 0;">Tidak ada data CBP terdaftar</div>
+            @endif
+        </div>
     </div>
 </div>
 </body>

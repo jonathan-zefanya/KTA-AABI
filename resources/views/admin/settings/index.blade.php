@@ -553,6 +553,7 @@ function switchTab(tabName) {
 
 // KTA Layout Editor with Drag & Drop
 let ktaLayoutConfig = @json(json_decode($settings['kta_layout_config'] ?? '{}', true) ?: []);
+let currentPage = 'page1'; // Track current page being edited
 let selectedElement = null;
 let isDragging = false;
 let isResizing = false;
@@ -570,32 +571,77 @@ function openLayoutEditor() {
             meta: {left: 7.5, top: 6.5, width: 16, fontSize: 12, labelWidth: 6},
             expiry: {left: 10.5, top: 15.8, fontSize: 11},
             photo: {left: 7.3, top: 14.5, width: 3.5, height: 4.8},
-            qr: {right: 1, bottom: 1.8, width: 3.5, height: 3.5}
+            qr: {right: 1, bottom: 1.8, width: 3.5, height: 3.5},
+            amp_section: {left: 1.5, top: 4.5, fontSize: 13},
+            cbp_section: {left: 1.5, top: 9, fontSize: 13}
         };
     }
+    
+    currentPage = 'page1'; // Reset to page 1
     
     const modal = document.getElementById('ktaLayoutModal');
     if (modal) {
         const bsModal = new bootstrap.Modal(modal);
         bsModal.show();
         
-        // Load template image
+        // Load template images
         setTimeout(() => {
-            const bgImg = document.getElementById('canvas-bg');
+            const bgImg1 = document.getElementById('canvas-bg-page1');
+            const bgImg2 = document.getElementById('canvas-bg-page2');
             const templatePath = @json($ktaTemplatePath ?? 'img/kta_template.png');
-            bgImg.src = '{{ asset("") }}' + (templatePath.startsWith('storage/') ? templatePath : 'storage/' + templatePath);
-            bgImg.onerror = function() {
+            
+            bgImg1.src = '{{ asset("") }}' + (templatePath.startsWith('storage/') ? templatePath : 'storage/' + templatePath);
+            bgImg1.onerror = function() {
                 this.src = '{{ asset("") }}' + templatePath;
+            };
+            
+            // Load back template
+            bgImg2.src = '{{ asset("img/kta_belakang.jpg") }}';
+            bgImg2.onerror = function() {
+                this.src = '{{ asset("storage/img/kta_belakang.jpg") }}';
             };
             
             initDragDrop();
             applyConfigToElements();
+            updatePageView();
         }, 100);
     }
 }
 
+function switchPage(page) {
+    currentPage = page;
+    updatePageView();
+    
+    // Update page buttons
+    document.querySelectorAll('[data-page-btn]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.pageBtn === page);
+    });
+    
+    // Reinitialize drag-drop for the new page's elements
+    setTimeout(() => {
+        initDragDrop();
+        deselectElement();
+    }, 50);
+}
+
+function updatePageView() {
+    const canvas1 = document.getElementById('kta-canvas-page1');
+    const canvas2 = document.getElementById('kta-canvas-page2');
+    
+    if (currentPage === 'page1') {
+        canvas1.style.display = 'block';
+        canvas2.style.display = 'none';
+    } else {
+        canvas1.style.display = 'none';
+        canvas2.style.display = 'block';
+    }
+}
+
 function initDragDrop() {
-    const canvas = document.getElementById('kta-canvas');
+    const canvas = currentPage === 'page1' 
+        ? document.getElementById('kta-canvas-page1')
+        : document.getElementById('kta-canvas-page2');
+        
     const elements = canvas.querySelectorAll('.draggable-elem');
     
     elements.forEach(elem => {
@@ -677,7 +723,9 @@ function getElementName(key) {
         meta: 'Data Perusahaan',
         expiry: 'Masa Berlaku',
         photo: 'Pas Foto',
-        qr: 'QR Code'
+        qr: 'QR Code',
+        amp_section: 'Lokasi AMP',
+        cbp_section: 'Lokasi CBP'
     };
     return names[key] || key;
 }
@@ -783,17 +831,36 @@ function updatePositionInfo(elem) {
 }
 
 function applyConfigToElements() {
-    const canvas = document.getElementById('kta-canvas');
-    if (!canvas) return;
+    const canvas1 = document.getElementById('kta-canvas-page1');
+    const canvas2 = document.getElementById('kta-canvas-page2');
     
-    const canvasWidth = canvas.offsetWidth; // 29.7cm dalam px
-    const canvasHeight = canvas.offsetHeight; // 21.28cm dalam px
+    if (!canvas1 && !canvas2) return;
     
-    Object.keys(ktaLayoutConfig).forEach(key => {
-        const elem = document.getElementById('elem-' + key);
+    const canvasWidth = 29.7 * CM_TO_PX;
+    const canvasHeight = 21.28 * CM_TO_PX;
+    
+    // Apply to page 1 elements
+    if (canvas1) {
+        applyConfigToCanvas(canvas1, 'page1', canvasWidth, canvasHeight);
+    }
+    
+    // Apply to page 2 elements
+    if (canvas2) {
+        applyConfigToCanvas(canvas2, 'page2', canvasWidth, canvasHeight);
+    }
+}
+
+function applyConfigToCanvas(canvas, page, canvasWidth, canvasHeight) {
+    const page1Elements = ['member_box', 'title', 'meta', 'expiry', 'photo', 'qr'];
+    const page2Elements = ['amp_section', 'cbp_section'];
+    const targetElements = page === 'page1' ? page1Elements : page2Elements;
+    
+    targetElements.forEach(key => {
+        const elem = canvas.querySelector('[data-elem="' + key + '"]');
         if (!elem) return;
         
         const config = ktaLayoutConfig[key];
+        if (!config) return;
         
         // Special handling for QR code with right/bottom positioning
         if (key === 'qr' && config.right !== undefined && config.bottom !== undefined) {
@@ -835,7 +902,7 @@ function applyConfigToElements() {
         }
     });
     
-    console.log('Applied config to elements:', ktaLayoutConfig);
+    console.log('Applied config to ' + page + ' elements:', ktaLayoutConfig);
 }
 
 function resetLayout() {
@@ -916,11 +983,14 @@ function saveLayoutConfig() {
 
 function updateLayoutConfig() {
     // Update config from current element positions in drag-drop canvas
-    const canvas = document.getElementById('kta-canvas');
+    const canvas = currentPage === 'page1' 
+        ? document.getElementById('kta-canvas-page1')
+        : document.getElementById('kta-canvas-page2');
+        
     if (!canvas) return;
     
-    const canvasWidth = canvas.offsetWidth; // 29.7cm dalam px
-    const canvasHeight = canvas.offsetHeight; // 21.28cm dalam px
+    const canvasWidth = canvas.offsetWidth;
+    const canvasHeight = canvas.offsetHeight;
     
     const elements = canvas.querySelectorAll('.draggable-elem');
     
@@ -974,13 +1044,23 @@ function updateLayoutConfig() {
                 <div class="d-flex h-100">
                     <!-- Canvas Area -->
                     <div class="flex-grow-1 position-relative" style="overflow:auto;background:#2a2f3e">
-                        <div class="d-flex align-items-center justify-content-center" style="min-height:100%;padding:2rem">
+                        <!-- Page Selector -->
+                        <div style="position:sticky;top:0;background:#0d1218;border-bottom:2px solid #444;padding:0.75rem;z-index:100;display:flex;gap:1rem">
+                            <button class="btn btn-sm btn-primary active" data-page-btn="page1" onclick="switchPage('page1')">
+                                <i class="bi bi-file-text me-1"></i>Halaman 1 (KTA)
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary" data-page-btn="page2" onclick="switchPage('page2')">
+                                <i class="bi bi-file-text me-1"></i>Halaman 2 (Lokasi Pabrik)
+                            </button>
+                        </div>
+                        
+                        <div class="d-flex align-items-center justify-content-center" style="min-height:calc(100% - 50px);padding:2rem">
                             <div id="kta-canvas-wrapper" style="position:relative;width:29.7cm;max-width:100%">
-                                <div id="kta-canvas" style="position:relative;width:29.7cm;height:21.28cm;background:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.5);border-radius:8px;overflow:hidden">
-                                    <!-- Template background will be loaded here -->
-                                    <img id="canvas-bg" src="" alt="Template" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none;user-select:none">
+                                <!-- PAGE 1 -->
+                                <div id="kta-canvas-page1" style="position:relative;width:29.7cm;height:21.28cm;background:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.5);border-radius:8px;overflow:hidden">
+                                    <img id="canvas-bg-page1" src="" alt="Template" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none;user-select:none">
                                     
-                                    <!-- Draggable Elements -->
+                                    <!-- Draggable Elements Page 1 -->
                                     <div style="position:absolute;top:0;left:0;width:100%;height:100%">
                                         <div id="elem-member_box" class="draggable-elem" data-elem="member_box">
                                             <div class="elem-content" style="color:#000">13/028/AB</div>
@@ -1031,6 +1111,24 @@ function updateLayoutConfig() {
                                             <div class="elem-content" style="display:flex;align-items:center;justify-content:center;height:100%;color:#000">
                                                 <i class="bi bi-qr-code" style="font-size:30px"></i>
                                             </div>
+                                            <div class="resize-handle"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- PAGE 2 -->
+                                <div id="kta-canvas-page2" style="position:relative;width:29.7cm;height:21.28cm;background:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.5);border-radius:8px;overflow:hidden;display:none;margin-top:2rem">
+                                    <img id="canvas-bg-page2" src="" alt="Template Belakang" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none;user-select:none">
+                                    
+                                    <!-- Draggable Elements Page 2 -->
+                                    <div style="position:absolute;top:0;left:0;width:100%;height:100%">
+                                        <div id="elem-amp_section" class="draggable-elem" data-elem="amp_section">
+                                            <div class="elem-content" style="color:#000;font-weight:700">Lokasi <i>Asphalt Mixing Plant</i></div>
+                                            <div class="resize-handle"></div>
+                                        </div>
+                                        
+                                        <div id="elem-cbp_section" class="draggable-elem" data-elem="cbp_section">
+                                            <div class="elem-content" style="color:#000;font-weight:700">Lokasi <i>Concrete Batching Plant</i></div>
                                             <div class="resize-handle"></div>
                                         </div>
                                     </div>

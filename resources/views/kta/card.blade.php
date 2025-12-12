@@ -1,6 +1,9 @@
 @php
     $company = $user->companies()->first();
     $bgPath = public_path('img/kta_template.png');
+    $backBgPath = public_path('img/kta_belakang.jpg');
+    $ampAddresses = $company ? $company->ampAddresses()->get() : [];
+    $cbpAddresses = $company ? $company->cbpAddresses()->get() : [];
 @endphp
 <!DOCTYPE html>
 <html lang="id">
@@ -229,6 +232,47 @@ body{
     <div class="download-actions">
         <a href="{{ route('kta.pdf') }}" class="btn btn-sm btn-primary">Download PDF</a>
         <a href="{{ route('kta') }}" class="btn btn-sm btn-outline-secondary">Kembali</a>
+    </div>
+
+    <!-- HALAMAN KEDUA PREVIEW -->
+    <div style="margin-top: 40px; padding-top: 40px; border-top: 2px solid #ddd;">
+        <h5 class="mb-3">Lembar Kedua - Lokasi Pabrik</h5>
+        <div class="card-wrapper">
+            <div class="card-inner">
+                <!-- Background Image -->
+                <img class="bg" src="{{ $backBgPath }}" alt="KTA Back Background" onerror="this.style.display='none'">
+                
+                <div class="layer">
+                    <!-- Lokasi AMP Section -->
+                    <div style="position:absolute;top:4.5cm;left:1.5cm;right:1.5cm;">
+                        <div style="font-weight:700;font-size:13px;margin-bottom:0.3cm;">Lokasi <i>Asphalt Mixing Plant</i></div>
+                        @if($ampAddresses->count())
+                            @foreach($ampAddresses as $idx => $plant)
+                            <div style="font-size:11px;margin:0.15cm 0;line-height:1.4;">
+                                <span style="font-weight:600;">{{ $idx + 1 }}.</span> {{ $plant->address }}
+                            </div>
+                            @endforeach
+                        @else
+                            <div style="font-size:11px;color:#999;margin:0.15cm 0;">Tidak ada data AMP terdaftar</div>
+                        @endif
+                    </div>
+
+                    <!-- Lokasi CBP Section -->
+                    <div style="position:absolute;top:9cm;left:1.5cm;right:1.5cm;">
+                        <div style="font-weight:700;font-size:13px;margin-bottom:0.3cm;">Lokasi <i>Concrete Batching Plant</i></div>
+                        @if($cbpAddresses->count())
+                            @foreach($cbpAddresses as $idx => $plant)
+                            <div style="font-size:11px;margin:0.15cm 0;line-height:1.4;">
+                                <span style="font-weight:600;">{{ $idx + 1 }}.</span> {{ $plant->address }}
+                            </div>
+                            @endforeach
+                        @else
+                            <div style="font-size:11px;color:#999;margin:0.15cm 0;">Tidak ada data CBP terdaftar</div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>
