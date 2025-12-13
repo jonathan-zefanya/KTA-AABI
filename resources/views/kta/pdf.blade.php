@@ -98,10 +98,13 @@
 
     .page{
         position:relative;
+        background-image: url('{{ $backBase64 }}');
+        background-size: cover;
+        background-position: center;
         width:29.7cm;
         height:21.28cm;
         margin:0 auto;
-        page-break-after: avoid;
+        page-break-after: always;
         @if($isPreview)
         box-shadow: 0 20px 60px rgba(0,0,0,0.15);
         border-radius: 8px;
@@ -115,24 +118,23 @@
     /* Nomor Anggota */
     .member-box{
         position:absolute;
-        left:0.8cm;
-        top:1.2cm;
+        left:2%;
+        top:1.7cm;
         width:4.5cm;
         padding:0.3cm;
         font-weight:700;
         font-size:16px;
         letter-spacing:1px;
         text-align:center;
-        background:#fff;
+        /* background:#fff; */
         z-index:10;
     }
 
     /* Judul KARTU TANDA ANGGOTA */
     .title{
         position:absolute;
-        top:2.4cm;
-        left:50%;
-        transform:translateX(-50%);
+        top:4.4cm;
+        left:55%;
         font-weight:800;
         font-size:14px;
         text-decoration:underline;
@@ -142,8 +144,8 @@
     /* Data perusahaan - table format */
     .meta{
         position:absolute;
-        left:5.8cm;
-        top:2.8cm;
+        left:40%;
+        top:5.2cm;
         width:23cm;
         font-size:11px;
         line-height:1.3;
@@ -178,12 +180,12 @@
     .photo{
         position:absolute;
         left:1cm;
-        top:3.5cm;
+        top:75%;
         width:3.8cm;
         height:5.2cm;
-        border:2px solid #000;
+        /* border:2px solid #000; */
         overflow:hidden;
-        background:#eee;
+        /* background:#eee; */
         display:flex;
         align-items:center;
         justify-content:center;
@@ -213,7 +215,7 @@
     .qr{
         position:absolute;
         left:1cm;
-        top:10.2cm;
+        top:70%;
         width:3.8cm;
         height:4.2cm;
         padding:0.2cm;
@@ -232,12 +234,11 @@
     /* Bar masa berlaku */
     .expiry{
         position:absolute;
-        left:5.8cm;
+        left:33%;
         top:13.5cm;
         width:18cm;
         padding:0.3cm 0.4cm;
-        border:2px solid #000;
-        background:#fff;
+        /* background:#fff; */
         font-weight:700;
         font-size:10px;
         line-height:1.4;
@@ -310,7 +311,7 @@
         @endif
 
         <!-- Photo Label -->
-        <div class="photo-label">FOTO<br>Stempel DPP</div>
+        {{-- <div class="photo-label">FOTO<br>Stempel DPP</div> --}}
 
         <!-- QR Code -->
         <div class="qr">
