@@ -179,10 +179,12 @@
     /* Pas Foto */
     .photo{
         position:absolute;
-        left:1cm;
-        top:75%;
-        width:3.8cm;
-        height:5.2cm;
+        left:26%;
+        top:70%;
+        width:3.2cm;
+        height:4.2cm;
+        /* max-width: 3.8cm; */
+        /* max-height: 5.2cm; */
         /* border:2px solid #000; */
         overflow:hidden;
         /* background:#eee; */
@@ -201,8 +203,8 @@
     /* Photo Label */
     .photo-label{
         position:absolute;
-        left:1cm;
-        top:8.8cm;
+        left:25%;
+        top:78%;
         width:3.8cm;
         font-size:9px;
         font-weight:600;
@@ -217,17 +219,26 @@
         left:1cm;
         top:70%;
         width:3.8cm;
-        height:4.2cm;
-        padding:0.2cm;
+        height:3.8cm;;
+        padding: 0.4cm;
         background:#fff;
         display:flex;
         align-items:center;
-        justify-content:center;
+        justify-content:center; 
         z-index:10;
     }
-    .qr img, .qr svg{
+    .qr-inner {
+        position: absolute;
+        top:0.25cm;
+        left:0.25cm;
+        right:0.25cm;
+        bottom:0.25cm;
+    }
+    .qr img, 
+    .qr svg{
         max-width:100%;
         max-height:100%;
+        margin: 0.2cm;
         object-fit:contain;
     }
 
