@@ -341,7 +341,8 @@
 
         <!-- Masa Berlaku -->
         <div class="expiry">
-            BERLAKU SAMPAI DENGAN TANGGAL<br>{{ optional($user->membership_card_expires_at)->format('d F Y') }}
+            BERLAKU SAMPAI DENGAN TANGGAL {{ $user->membership_card_expires_at ? strtoupper($user->membership_card_expires_at->locale('id')->translatedFormat('d F Y')) : '' }}
+            <br>JAKARTA, {{ $user->membership_card_issued_at ? strtoupper($user->membership_card_issued_at->locale('id')->translatedFormat('d F Y')) : strtoupper(now()->locale('id')->translatedFormat('d F Y')) }}
         </div>
     </div>
 </div>
