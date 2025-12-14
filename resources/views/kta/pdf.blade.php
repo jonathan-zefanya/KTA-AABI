@@ -104,13 +104,15 @@
         width:29.7cm;
         height:21.28cm;
         margin:0 auto;
-        page-break-after: always;
         @if($isPreview)
         box-shadow: 0 20px 60px rgba(0,0,0,0.15);
         border-radius: 8px;
         overflow: hidden;
         margin-bottom: 20px;
         @endif
+    }
+    .page:first-of-type {
+        page-break-after: always;
     }
     .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
     .layer{position:absolute;inset:0;}
