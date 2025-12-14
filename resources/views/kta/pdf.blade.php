@@ -119,11 +119,11 @@
     .member-box{
         position:absolute;
         left:2%;
-        top:1.7cm;
-        width:4.5cm;
+        top:1.8cm;
+        width:5.25cm;
         padding:0.3cm;
         font-weight:700;
-        font-size:16px;
+        font-size:21px;
         letter-spacing:1px;
         text-align:center;
         /* background:#fff; */
@@ -155,12 +155,15 @@
         border-collapse: collapse;
         width: 100%;
         border: none;
+        /* buat agak ke kiri */
+        margin-left: -2.5cm;
     }
     .meta table td {
         border: none;
         padding: 0.25cm 0.2cm;
         vertical-align: top;
         line-height: 1.5;
+        font-size:15px;
     }
     .meta table td:first-child {
         font-weight: 700;
@@ -173,7 +176,7 @@
     }
     .meta table td:last-child {
         word-break: break-word;
-        font-size:10px;
+        font-size:15px;
     }
 
     /* Pas Foto */
@@ -221,7 +224,6 @@
         width:3.8cm;
         height:3.8cm;;
         padding: 0.4cm;
-        background:#fff;
         display:flex;
         align-items:center;
         justify-content:center; 
@@ -246,12 +248,12 @@
     .expiry{
         position:absolute;
         left:33%;
-        top:13.5cm;
+        top:14.5cm;
         width:18cm;
         padding:0.3cm 0.4cm;
         /* background:#fff; */
         font-weight:700;
-        font-size:10px;
+        font-size:15px;
         line-height:1.4;
         text-align:center;
         z-index:10;
@@ -349,31 +351,32 @@
     @endif
     <div class="layer">
         <!-- Lokasi AMP Section -->
-        <div style="position:absolute;top:4.5cm;left:1.5cm;right:1.5cm;">
-            <div style="font-weight:700;font-size:13px;margin-bottom:0.3cm;">Lokasi <i>Asphalt Mixing Plant</i></div>
+        <div style="position:absolute;top:5.5cm;left:1.5cm;right:1.5cm;">
+            <div style="font-weight:700;font-size:15px;margin-bottom:0.3cm;">Lokasi <i>Asphalt Mixing Plant</i></div>
             @if($ampAddresses->count())
-                @foreach($ampAddresses as $idx => $plant)
-                <div style="font-size:11px;margin:0.15cm 0;line-height:1.4;">
-                    <span style="font-weight:600;">{{ $idx + 1 }}.</span> {{ $plant->address }}
-                </div>
-                @endforeach
+            @foreach($ampAddresses as $idx => $plant)
+            <div style="font-size:15px;margin:0.15cm 0;line-height:1.4;">
+                <span style="font-weight:600;">{{ $idx + 1 }}.</span> {{ $plant->address }}
+            </div>
+            @endforeach
             @else
-                <div style="font-size:11px;color:#999;margin:0.15cm 0;">Tidak ada data AMP terdaftar</div>
+            <div style="font-size:15px;color:#999;margin:0.15cm 0;">Tidak ada data AMP terdaftar</div>
             @endif
         </div>
 
         <!-- Lokasi CBP Section -->
         <div style="position:absolute;top:9cm;left:1.5cm;right:1.5cm;">
-            <div style="font-weight:700;font-size:13px;margin-bottom:0.3cm;">Lokasi <i>Concrete Batching Plant</i></div>
+            <div style="font-weight:700;font-size:15px;margin-bottom:0.3cm;">Lokasi <i>Concrete Batching Plant</i></div>
             @if($cbpAddresses->count())
-                @foreach($cbpAddresses as $idx => $plant)
-                <div style="font-size:11px;margin:0.15cm 0;line-height:1.4;">
-                    <span style="font-weight:600;">{{ $idx + 1 }}.</span> {{ $plant->address }}
-                </div>
-                @endforeach
+            @foreach($cbpAddresses as $idx => $plant)
+            <div style="font-size:15px;margin:0.15cm 0;line-height:1.4;">
+                <span style="font-weight:600;">{{ $idx + 1 }}.</span> {{ $plant->address }}
+            </div>
+            @endforeach
             @else
-                <div style="font-size:11px;color:#999;margin:0.15cm 0;">Tidak ada data CBP terdaftar</div>
+            <div style="font-size:15px;color:#999;margin:0.15cm 0;">Tidak ada data CBP terdaftar</div>
             @endif
+        </div>
         </div>
     </div>
 </div>
