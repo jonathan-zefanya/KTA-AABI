@@ -111,8 +111,28 @@
                 <span class="truncate" title="{{ $admin->email }}">{{ $admin->email }}</span>
             </div>
         </div>
+        
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show mb-3" role="alert" style="border-radius: 12px;">
+                <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert" style="border-radius: 12px;">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+        @if(session('info'))
+            <div class="alert alert-info alert-dismissible fade show mb-3" role="alert" style="border-radius: 12px;">
+                <i class="bi bi-info-circle-fill me-2"></i>{{ session('info') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+        
         @yield('content')
-        <footer class="adm-footer text-center text-dim">Dipersembahkan dengan ❤️ | Build Time: {{ now()->format('H:i') }}</footer>
+        <footer class="adm-footer text-center text-dim">Dibuat oleh FAJ | Build Time: {{ now()->format('H:i') }}</footer>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')

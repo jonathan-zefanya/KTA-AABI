@@ -135,6 +135,14 @@
                             <a class="btn btn-outline-info" href="{{ route('kta.public',[ 'user'=>$u->id, 'number'=>str_replace(['/', '\\'],'-',$u->membership_card_number) ]) }}" target="_blank" title="Validasi Publik">
                                 <i class="bi bi-shield-check"></i>
                             </a>
+                            @if(!$u->hasActiveMembershipCard())
+                                <form action="{{ route('admin.kta.renew', $u) }}" method="POST" style="display: inline;" onsubmit="return confirm('Perpanjang KTA untuk {{ $u->name }}?')">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-success" title="Perpanjang KTA">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </button>
+                                </form>
+                            @endif
                         </div>
                     </td>
                 </tr>

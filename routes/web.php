@@ -154,6 +154,7 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/kta', [\App\Http\Controllers\AdminKtaController::class,'index'])->name('admin.kta.index');
     Route::get('/kta/{user}', [\App\Http\Controllers\AdminKtaController::class,'show'])->name('admin.kta.show');
     Route::get('/kta/{user}/pdf', [\App\Http\Controllers\AdminKtaController::class,'pdf'])->name('admin.kta.pdf');
+    Route::post('/kta/{user}/renew', [\App\Http\Controllers\AdminKtaController::class,'renew'])->name('admin.kta.renew');
 
     // Admin management (manage fellow admins)
     Route::get('/admins', [\App\Http\Controllers\AdminAdminController::class,'index'])->name('admin.admins.index');
