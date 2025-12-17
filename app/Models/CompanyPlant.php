@@ -10,7 +10,11 @@ class CompanyPlant extends Model
     use HasFactory;
 
     protected $fillable = ['company_id', 'type', 'address'];
-    protected $casts = ['type' => 'string'];
+    
+    protected $casts = [
+        'company_id' => 'integer',
+        'type' => 'string'
+    ];
 
     public function company()
     {

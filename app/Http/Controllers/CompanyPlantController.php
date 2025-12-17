@@ -64,7 +64,11 @@ class CompanyPlantController extends Controller
         $user = Auth::user();
         $company = $user->companies()->first();
 
-        if (!$company || $plant->company_id !== $company->id) {
+        if (!$company) {
+            return redirect()->route('dashboard')->with('error', 'Perusahaan tidak ditemukan');
+        }
+
+        if ((int)$plant->company_id != (int)$company->id) {
             return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki akses');
         }
 
@@ -76,7 +80,11 @@ class CompanyPlantController extends Controller
         $user = Auth::user();
         $company = $user->companies()->first();
 
-        if (!$company || $plant->company_id !== $company->id) {
+        if (!$company) {
+            return redirect()->route('dashboard')->with('error', 'Perusahaan tidak ditemukan');
+        }
+
+        if ((int)$plant->company_id != (int)$company->id) {
             return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki akses');
         }
 
@@ -96,7 +104,11 @@ class CompanyPlantController extends Controller
         $user = Auth::user();
         $company = $user->companies()->first();
 
-        if (!$company || $plant->company_id !== $company->id) {
+        if (!$company) {
+            return redirect()->route('dashboard')->with('error', 'Perusahaan tidak ditemukan');
+        }
+
+        if ((int)$plant->company_id != (int)$company->id) {
             return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki akses');
         }
 
