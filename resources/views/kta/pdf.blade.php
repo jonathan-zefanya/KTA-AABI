@@ -135,12 +135,13 @@
     /* Judul KARTU TANDA ANGGOTA */
     .title{
         position:absolute;
-        top:4.4cm;
+        top:4.6cm;
         left:55%;
-        font-weight:800;
+        font-weight:900;
         font-size:14px;
         text-decoration:underline;
         z-index:10;
+        letter-spacing:1px;
     }
 
     /* Data perusahaan - table format */
@@ -164,7 +165,7 @@
         border: none;
         padding: 0.25cm 0.2cm;
         vertical-align: top;
-        line-height: 1.5;
+        line-height: 1.2;
         font-size:15px;
     }
     .meta table td:first-child {
@@ -250,13 +251,13 @@
     .expiry{
         position:absolute;
         left:33%;
-        top:14.5cm;
+        top:14.1cm;
         width:18cm;
         padding:0.3cm 0.4cm;
         /* background:#fff; */
-        font-weight:700;
+        font-weight:800;
         font-size:15px;
-        line-height:1.4;
+        line-height:1.8;
         text-align:center;
         z-index:10;
     }
@@ -361,7 +362,7 @@
                 <div style="
                     font-weight:700;
                     font-size:15px;
-                    margin-bottom:0.4cm;
+                    margin-bottom:0.2cm;
                     text-decoration:underline;
                     color:#000;
                 ">
@@ -394,7 +395,7 @@
                 <div style="
                     font-weight:700;
                     font-size:15px;
-                    margin-bottom:0.4cm;
+                    margin-bottom:0.2cm;
                     text-decoration:underline;
                     color:#000;
                 ">
