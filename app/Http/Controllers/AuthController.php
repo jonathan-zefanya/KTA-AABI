@@ -78,6 +78,7 @@ class AuthController extends Controller
             'kualifikasi' => ['required','in:Kecil / Spesialis 1,Menengah / Spesialis 2,Besar BUJKN / Spesialis 2,Besar PMA / Spesialis 2,BUJKA'],
             'penanggung_jawab' => ['required','string','max:255'],
             'npwp' => ['required','string','max:32'],
+            'nib' => ['required','string','max:50'],
             'bu_email' => ['required','email','max:255','unique:users,email'],
             'bu_phone' => ['required','string','max:30'],
             'postal_code' => ['nullable','string','max:10'],
@@ -163,6 +164,7 @@ class AuthController extends Controller
             'membership_type' => 'AB', // Default Anggota Biasa saat register
             'penanggung_jawab' => $data['penanggung_jawab'],
             'npwp' => $data['npwp'],
+            'nib' => $data['nib'],
             'email' => $data['bu_email'],
             'phone' => $data['bu_phone'],
             'address' => $data['address'],

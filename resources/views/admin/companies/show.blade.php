@@ -20,11 +20,15 @@
             <div class="text-dim">PJBU</div>
             <div>{{ $company->penanggung_jawab ?? '-' }}</div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="text-dim">NPWP</div>
             <div>{{ $company->npwp ?? '-' }}</div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
+            <div class="text-dim">NIB</div>
+            <div>{{ $company->nib ?? '-' }}</div>
+        </div>
+        <div class="col-md-4">
             <div class="text-dim">Wilayah</div>
             <div>{{ $company->city_name }}, {{ $company->province_name }} {{ $company->postal_code }}</div>
         </div>
@@ -32,18 +36,6 @@
             <div class="text-dim">Alamat</div>
             <div>{{ $company->address }}</div>
         </div>
-        @if($company->asphalt_mixing_plant_address)
-        <div class="col-12">
-            <div class="text-dim">Alamat Lokasi Asphalt Mixing Plant</div>
-            <div>{{ $company->asphalt_mixing_plant_address }}</div>
-        </div>
-        @endif
-        @if($company->concrete_batching_plant_address)
-        <div class="col-12">
-            <div class="text-dim">Alamat Lokasi Concrete Batching Plant</div>
-            <div>{{ $company->concrete_batching_plant_address }}</div>
-        </div>
-        @endif
     </div>
     <hr class="border-secondary my-4">
     <h6 class="mb-2">Dokumen</h6>
@@ -55,6 +47,49 @@
         <li>KTP PJBU: @if($company->ktp_pjbu_path)<a target="_blank" href="{{ asset('storage/'.$company->ktp_pjbu_path) }}">Lihat</a>@else<span class="text-dim">-</span>@endif</li>
         <li>NPWP PJBU: @if($company->npwp_pjbu_path)<a target="_blank" href="{{ asset('storage/'.$company->npwp_pjbu_path) }}">Lihat</a>@else<span class="text-dim">-</span>@endif</li>
     </ul>
+    <hr class="border-secondary my-4">
+    <h6 class="mb-2">Lokasi Plant (AMP & CBP)</h6>
+    @php
+        $plants = $company->plants;
+    @endphp
+    @if($plants->count())
+        <div class="table-responsive">
+            <table class="table table-sm table-dark table-striped small">
+                <thead>
+                    <tr>
+                        <th>Jenis</th>
+                        <th>Alamat</th>
+                        <th width="100">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($plants as $plant)
+                        <tr>
+                            <td>
+                                @if($plant->type === 'AMP')
+                                    <span class="badge bg-info">AMP</span>
+                                @else
+                                    <span class="badge bg-warning text-dark">CBP</span>
+                                @endif
+                            </td>
+                            <td>{{ $plant->address }}</td>
+                            <td>
+                                <form action="{{ route('admin.companies.plants.destroy', [$company, $plant]) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus lokasi plant ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @else
+        <p class="small text-dim">Tidak ada lokasi plant yang terdaftar.</p>
+    @endif
     <hr class="border-secondary my-4">
     <h6 class="mb-2">Pengguna Terkait</h6>
     <ul class="small mb-0">

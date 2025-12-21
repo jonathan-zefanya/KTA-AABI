@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\CompanyPlant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -71,11 +72,10 @@ class AdminCompanyController extends Controller
             // penanggung_jawab will be taken from selected/created user
             'penanggung_jawab' => ['nullable','string','max:255'],
             'npwp' => ['nullable','string','max:32','unique:companies,npwp'],
+            'nib' => ['nullable','string','max:50'],
             'email' => ['nullable','email','max:255'],
             'phone' => ['nullable','string','max:30'],
             'address' => ['nullable','string','max:500'],
-            'asphalt_mixing_plant_address' => ['nullable','string','max:500'],
-            'concrete_batching_plant_address' => ['nullable','string','max:500'],
             'province_code' => ['nullable','string','max:10'],
             'province_name' => ['nullable','string','max:100'],
             'city_code' => ['nullable','string','max:10'],
@@ -153,11 +153,10 @@ class AdminCompanyController extends Controller
             'kualifikasi' => ['nullable','string','max:30'],
             'membership_type' => ['nullable','in:AB,ALB'],
             'npwp' => ['nullable','string','max:32', Rule::unique('companies','npwp')->ignore($company->id)],
+            'nib' => ['nullable','string','max:50'],
             'email' => ['nullable','email','max:255'],
             'phone' => ['nullable','string','max:30'],
             'address' => ['nullable','string','max:500'],
-            'asphalt_mixing_plant_address' => ['nullable','string','max:500'],
-            'concrete_batching_plant_address' => ['nullable','string','max:500'],
             'province_code' => ['nullable','string','max:10'],
             'province_name' => ['nullable','string','max:100'],
             'city_code' => ['nullable','string','max:10'],
@@ -323,5 +322,18 @@ class AdminCompanyController extends Controller
     {
         $filename = 'template-import-companies.xlsx';
         return Excel::download(new CompaniesImportTemplate(), $filename);
+    }
+
+    public function destroyPlant(Company $company, CompanyPlant $plant)
+    {
+        // Verify plant belongs to company
+        if ((int)$plant->company_id !== (int)$company->id) {
+            return back()->with('error', 'Plant tidak ditemukan dalam perusahaan ini.');
+        }
+
+        $type = $plant->type === 'AMP' ? 'Asphalt Mixing Plant' : 'Concrete Batching Plant';
+        $plant->delete();
+
+        return back()->with('success', "Lokasi $type berhasil dihapus.");
     }
 }

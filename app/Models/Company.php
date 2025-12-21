@@ -17,6 +17,7 @@ class Company extends Model
     'membership_type',
     'penanggung_jawab',
     'npwp',
+    'nib',
         'registration_number',
         'email',
         'phone',

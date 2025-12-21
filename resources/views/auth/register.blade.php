@@ -114,10 +114,17 @@
                                             <div class="invalid-feedback">Isi PJBU.</div>
                                         </div>
                                     </div>
-                                    <div class="mt-3 mb-3">
-                                        <label class="form-label small fw-medium">NPWP Badan Usaha</label>
-                                        <input type="text" name="npwp" value="{{ old('npwp') }}" class="form-control" required>
-                                        <div class="invalid-feedback">Isi NPWP.</div>
+                                    <div class="row g-3 mt-1">
+                                        <div class="col-sm-6">
+                                            <label class="form-label small fw-medium">NPWP Badan Usaha</label>
+                                            <input type="text" name="npwp" value="{{ old('npwp') }}" class="form-control" required>
+                                            <div class="invalid-feedback">Isi NPWP.</div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label small fw-medium">NIB (Nomor Induk Berusaha)</label>
+                                            <input type="text" name="nib" value="{{ old('nib') }}" class="form-control" required>
+                                            <div class="invalid-feedback">Isi NIB.</div>
+                                        </div>
                                     </div>
                                     <div class="row g-3">
                                         <div class="col-sm-6">

@@ -131,6 +131,7 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/companies/{company}/edit', [AdminCompanyController::class, 'edit'])->name('admin.companies.edit');
     Route::put('/companies/{company}', [AdminCompanyController::class, 'update'])->name('admin.companies.update');
     Route::get('/companies/{company}/download-all', [AdminCompanyController::class, 'downloadAll'])->name('admin.companies.downloadAll');
+    Route::delete('/companies/{company}/plants/{plant}', [AdminCompanyController::class, 'destroyPlant'])->name('admin.companies.plants.destroy');
     
     // Settings
     Route::get('/settings', [AdminSettingController::class, 'index'])->name('admin.settings.index');
