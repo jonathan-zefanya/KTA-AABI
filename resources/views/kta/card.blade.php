@@ -1,6 +1,6 @@
 @php
     $company = $user->companies()->first();
-    $bgPath = public_path('img/kta_template.png');
+    $bgPath = public_path('img/kta_depan.jpg');
     $backBgPath = public_path('img/kta_belakang.jpg');
     $ampAddresses = $company ? $company->ampAddresses()->get() : [];
     $cbpAddresses = $company ? $company->cbpAddresses()->get() : [];

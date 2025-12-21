@@ -14,7 +14,7 @@ return new class extends Migration
     {
         // Insert default KTA layout configuration
         $defaults = [
-            'kta_template_path' => 'img/kta_template.png',
+            'kta_template_path' => 'img/kta_depan.jpg',
             'kta_layout_config' => json_encode([
                 'member_box' => ['left' => 50, 'top' => 53, 'fontSize' => 18],
                 'title' => ['left' => 460, 'top' => 145, 'fontSize' => 18],

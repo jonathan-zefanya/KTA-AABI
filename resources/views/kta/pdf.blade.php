@@ -3,7 +3,7 @@
     $isPreview = isset($preview) && $preview;
 
     // Get template path from settings
-    $templatePath = \App\Models\Setting::getValue('kta_template_path', 'img/kta_template.png');
+    $templatePath = \App\Models\Setting::getValue('kta_template_path', 'img/kta_depan.jpg');
 
     // Determine the full path (support uploads stored on public disk)
     if (str_starts_with($templatePath, 'uploads/')) {

@@ -171,7 +171,7 @@
                         <input type="file" name="kta_template" accept="image/png,image/jpeg" class="form-control form-control-sm bg-dark border-secondary text-light" required>
                         <div class="form-text text-dim" style="font-size:0.7rem">Format: PNG/JPG, Rekomendasi: 1000x620px, Maks: 5MB</div>
                     </div>
-                    @php($ktaTemplatePath = $settings['kta_template_path'] ?? 'img/kta_template.png')
+                    @php($ktaTemplatePath = $settings['kta_template_path'] ?? 'img/kta_depan.jpg')
                     @if($ktaTemplatePath)
                         <div class="mb-3">
                             <div class="small text-dim mb-2">Template Saat Ini:</div>
@@ -588,7 +588,7 @@ function openLayoutEditor() {
         setTimeout(() => {
             const bgImg1 = document.getElementById('canvas-bg-page1');
             const bgImg2 = document.getElementById('canvas-bg-page2');
-            const templatePath = @json($ktaTemplatePath ?? 'img/kta_template.png');
+            const templatePath = @json($ktaTemplatePath ?? 'img/kta_depan.jpg');
             
             bgImg1.src = '{{ asset("") }}' + (templatePath.startsWith('storage/') ? templatePath : 'storage/' + templatePath);
             bgImg1.onerror = function() {
