@@ -138,7 +138,7 @@
         top:4.6cm;
         left:55%;
         font-weight:900;
-        font-size:14px;
+        font-size:16px;
         text-decoration:underline;
         z-index:10;
         letter-spacing:1px;
