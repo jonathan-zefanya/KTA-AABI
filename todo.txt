@@ -13,6 +13,6 @@
 AA : ditentukan dari penomoran provinsi anggota
 BBB : nomor urut anggota berdasarkan di provinsi
 CCC : AB (Anggota Biasa)/ALB (Anggota Luar Biasa)
-
-13. Tambahkan Generate Invoice otomatis untuk perpanjangan (untuk yang status KTA sudah EXPIRED) di menu KTA
-14. Tambahkan Status User (Aktif & Non-Aktif (gunakan toggle on off di admin bagian pengguna)) 
+13. Tambahkan Generate Invoice otomatis untuk perpanjangan (untuk yang status KTA sudah EXPIRED) di menu KTA (done)
+14. Tambahkan Status User (Aktif & Non-Aktif (gunakan toggle on off di admin bagian pengguna))  (done)
+15. Tambahkan fitur support ticketing di menu admin sebagai penerima dan user sebagai request untuk mengubah data BU atau pergantian email atau lainnya (mengisi request perbaikan) (done)

@@ -86,6 +86,12 @@ Route::middleware(['web','auth','user.active'])->group(function () {
     Route::put('/company/plants/{plant}', [\App\Http\Controllers\CompanyPlantController::class,'update'])->name('company.plants.update');
     Route::delete('/company/plants/{plant}', [\App\Http\Controllers\CompanyPlantController::class,'destroy'])->name('company.plants.destroy');
     
+    // Support Tickets (User)
+    Route::get('/support-tickets', [\App\Http\Controllers\SupportTicketController::class,'index'])->name('support-tickets.index');
+    Route::get('/support-tickets/create', [\App\Http\Controllers\SupportTicketController::class,'create'])->name('support-tickets.create');
+    Route::post('/support-tickets', [\App\Http\Controllers\SupportTicketController::class,'store'])->name('support-tickets.store');
+    Route::get('/support-tickets/{supportTicket}', [\App\Http\Controllers\SupportTicketController::class,'show'])->name('support-tickets.show');
+    
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
@@ -157,6 +163,12 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/kta/{user}/pdf', [\App\Http\Controllers\AdminKtaController::class,'pdf'])->name('admin.kta.pdf');
     Route::post('/kta/{user}/renew', [\App\Http\Controllers\AdminKtaController::class,'renew'])->name('admin.kta.renew');
 
+    // Support Tickets (Admin)
+    Route::get('/support-tickets', [\App\Http\Controllers\AdminSupportTicketController::class,'index'])->name('admin.support-tickets.index');
+    Route::get('/support-tickets/{supportTicket}', [\App\Http\Controllers\AdminSupportTicketController::class,'show'])->name('admin.support-tickets.show');
+    Route::put('/support-tickets/{supportTicket}', [\App\Http\Controllers\AdminSupportTicketController::class,'update'])->name('admin.support-tickets.update');
+    Route::post('/support-tickets/{supportTicket}/close', [\App\Http\Controllers\AdminSupportTicketController::class,'close'])->name('admin.support-tickets.close');
+    Route::post('/support-tickets/{supportTicket}/assign', [\App\Http\Controllers\AdminSupportTicketController::class,'assign'])->name('admin.support-tickets.assign');
     // Admin management (manage fellow admins)
     Route::get('/admins', [\App\Http\Controllers\AdminAdminController::class,'index'])->name('admin.admins.index');
     Route::post('/admins', [\App\Http\Controllers\AdminAdminController::class,'store'])->name('admin.admins.store');

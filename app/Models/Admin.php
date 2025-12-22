@@ -31,6 +31,11 @@ class Admin extends Authenticatable
         return $this->role === 'superadmin';
     }
 
+    public function assignedTickets()
+    {
+        return $this->hasMany(SupportTicket::class, 'assigned_to');
+    }
+
     public static function superCount(): int
     {
         return static::where('role','superadmin')->count();

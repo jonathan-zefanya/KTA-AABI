@@ -70,6 +70,11 @@ class User extends Authenticatable
         return $this->hasMany(KtaRenewal::class);
     }
 
+    public function supportTickets()
+    {
+        return $this->hasMany(SupportTicket::class);
+    }
+
     public function hasActiveMembershipCard(): bool
     {
         return $this->membership_card_number && $this->membership_card_expires_at && now()->lte($this->membership_card_expires_at);

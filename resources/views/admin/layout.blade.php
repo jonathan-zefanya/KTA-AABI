@@ -90,6 +90,7 @@
             <a class="{{ request()->routeIs('admin.companies.*') ? 'active' : '' }}" href="{{ route('admin.companies.index') }}">Perusahaan</a>
             <a class="{{ request()->routeIs('admin.invoices.*') ? 'active' : '' }}" href="{{ route('admin.invoices.index') }}">Transaksi</a>
             <a class="{{ request()->routeIs('admin.kta.*') ? 'active' : '' }}" href="{{ route('admin.kta.index') }}">KTA</a>
+            <a class="{{ request()->routeIs('admin.support-tickets.*') ? 'active' : '' }}" href="{{ route('admin.support-tickets.index') }}">Tiket Dukungan</a>
             <a class="{{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">Pengaturan</a>
             @if($admin->role === 'superadmin')
                 <a class="{{ request()->routeIs('admin.admins.*') ? 'active' : '' }}" href="{{ route('admin.admins.index') }}">Manage Admin</a>
