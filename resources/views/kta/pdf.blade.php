@@ -85,7 +85,7 @@
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
-        font-family: 'Arial', sans-serif; 
+        font-family: Arial, 'DejaVu Sans', sans-serif; 
         @if($isPreview)
         background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         padding: 20px;
@@ -135,13 +135,14 @@
     /* Judul KARTU TANDA ANGGOTA */
     .title{
         position:absolute;
-        top:4.6cm;
-        left:55%;
-        font-weight:900;
-        font-size:16px;
+        top:5.0cm;
+        left:47%;
+        font-family: Arial, 'DejaVu Sans', sans-serif;
+        font-weight:bold;
+        font-size:23px;
         text-decoration:underline;
         z-index:10;
-        letter-spacing:1px;
+        letter-spacing:5px;
     }
 
     /* Data perusahaan - table format */
@@ -160,6 +161,8 @@
         border: none;
         /* buat agak ke kiri */
         margin-left: -2.5cm;
+        /* buat agak kebawah */
+        margin-top: 1.1cm;
     }
     .meta table td {
         border: none;
@@ -255,7 +258,8 @@
         width:18cm;
         padding:0.3cm 0.4cm;
         /* background:#fff; */
-        font-weight:800;
+        font-family: Arial, 'DejaVu Sans', sans-serif;
+        font-weight:bold;
         font-size:15px;
         line-height:1.8;
         text-align:center;

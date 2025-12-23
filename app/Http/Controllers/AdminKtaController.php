@@ -74,6 +74,26 @@ class AdminKtaController extends Controller
         if(!$user->membership_card_number){
             return back()->with('error','User belum memiliki KTA.');
         }
+        
+        // Register Arial font to DOMPDF
+        $fontDir = storage_path('fonts');
+        if (!is_dir($fontDir)) {
+            mkdir($fontDir, 0755, true);
+        }
+        
+        // Copy Arial font files to storage/fonts if not exists
+        $arialFont = public_path('font/arial/ARIAL.TTF');
+        $arialBoldFont = public_path('font/arial/ARIALBD.TTF');
+        $storageArialFont = storage_path('fonts/arial.ttf');
+        $storageArialBoldFont = storage_path('fonts/arial_bold.ttf');
+        
+        if (file_exists($arialFont) && !file_exists($storageArialFont)) {
+            copy($arialFont, $storageArialFont);
+        }
+        if (file_exists($arialBoldFont) && !file_exists($storageArialBoldFont)) {
+            copy($arialBoldFont, $storageArialBoldFont);
+        }
+        
         $publicNumber = str_replace(['/', '\\'], '-', $user->membership_card_number);
         $validationUrl = route('kta.public',[ 'user'=>$user->id, 'number'=>$publicNumber ]);
         $qrSvg = QrCode::format('svg')->size(180)->margin(0)->generate($validationUrl);
@@ -82,6 +102,7 @@ class AdminKtaController extends Controller
         $logo = \App\Models\Setting::getValue('site_logo_path');
         $signature = \App\Models\Setting::getValue('signature_path');
         $full = $r->boolean('full');
+        
         $pdf = Pdf::loadView('kta.pdf',[ 'user'=>$user,'qrSvg'=>$qrSvg,'qrPng'=>$qrPngBase64,'validationUrl'=>$validationUrl,'logo'=>$logo,'signature'=>$signature,'full'=>$full ])->setPaper('a4','landscape');
         $safeNumber = str_replace(['/', '\\'], '-', $user->membership_card_number);
         return $pdf->download('KTA-'.$safeNumber.($full?'-full':'-plain').'.pdf');
