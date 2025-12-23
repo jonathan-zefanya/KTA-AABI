@@ -13,6 +13,7 @@ class SupportTicketController extends Controller
     public function index(Request $request)
     {
         $query = SupportTicket::query()
+            ->where('user_id', auth()->id())
             ->with(['user', 'assignedAdmin']);
 
         // Filter keyword
@@ -20,12 +21,13 @@ class SupportTicketController extends Controller
             $q = $request->q;
             $query->where(function ($w) use ($q) {
                 $w->where('subject', 'like', "%$q%")
-                ->orWhere('ticket_number', 'like', "%$q%")
-                ->orWhereHas('user', function ($u) use ($q) {
-                    $u->where('name', 'like', "%$q%");
-                });
+                ->orWhere('ticket_number', 'like', "%$q%");
             });
         }
+
+        $query->when($request->filled('status'), function ($q) use ($request) {
+            $q->where('status', $request->status);
+        });
 
         $query->when($request->filled('created_from'), function ($q) use ($request) {
             $q->whereDate('created_at', '>=', $request->created_from);
@@ -40,7 +42,7 @@ class SupportTicketController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.support-tickets.index', compact('tickets'));
+        return view('support-tickets.index', compact('tickets'));
     }
 
     /**

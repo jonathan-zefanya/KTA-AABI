@@ -92,13 +92,18 @@
             <a class="{{ request()->routeIs('admin.kta.*') ? 'active' : '' }}" href="{{ route('admin.kta.index') }}">KTA</a>
             <a class="{{ request()->routeIs('admin.support-tickets.*') ? 'active' : '' }}" href="{{ route('admin.support-tickets.index') }}">Tiket Dukungan</a>
             <a class="{{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">Pengaturan</a>
-            @if($admin->role === 'superadmin')
+            @if($admin && $admin->role === 'superadmin')
                 <a class="{{ request()->routeIs('admin.admins.*') ? 'active' : '' }}" href="{{ route('admin.admins.index') }}">Manage Admin</a>
             @endif
         </nav>
         <div class="mt-auto small text-dim">
-            <div class="mb-2">Masuk sebagai:<br><span class="text-light">{{ $admin->name }}</span></div>
-            <form action="{{ route('admin.logout') }}" method="POST" class="d-grid gap-2">@csrf <button class="btn btn-sm btn-outline-danger">Logout</button></form>
+            @if($admin)
+                <div class="mb-2">Masuk sebagai:<br><span class="text-light">{{ $admin->name }}</span></div>
+                <form action="{{ route('admin.logout') }}" method="POST" class="d-grid gap-2">@csrf <button class="btn btn-sm btn-outline-danger">Logout</button></form>
+            @else
+                <div class="mb-2">Masuk sebagai:<br><span class="text-light">{{ auth()->user()->name ?? 'User' }}</span></div>
+                <form action="{{ route('logout') }}" method="POST" class="d-grid gap-2">@csrf <button class="btn btn-sm btn-outline-danger">Logout</button></form>
+            @endif
             <div class="pt-3 border-top border-secondary-subtle mt-3">&copy; {{ date('Y') }} {{ config('app.name') }}</div>
         </div>
     </aside>
@@ -109,7 +114,11 @@
                 <div class="text-dim">@yield('breadcrumbs')</div>
             </div>
             <div class="d-flex gap-2 align-items-center small text-dim">
-                <span class="truncate" title="{{ $admin->email }}">{{ $admin->email }}</span>
+                @if($admin)
+                    <span class="truncate" title="{{ $admin->email }}">{{ $admin->email }}</span>
+                @else
+                    <span class="truncate" title="{{ auth()->user()->email ?? '' }}">{{ auth()->user()->email ?? '' }}</span>
+                @endif
             </div>
         </div>
         

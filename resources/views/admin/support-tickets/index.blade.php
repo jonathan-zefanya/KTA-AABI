@@ -121,7 +121,7 @@
             </select>
         </div>
         <div class="col-lg-1 col-md-6">
-            <button type="submit" class="btn btn-sm btn-primary w-100"><i class="bi bi-search me-1"></i>Terapkan</button>
+            <button type="submit" class="btn btn-sm btn-primary w-100"><i class="bi bi-search me-1"></i></button>
         </div>
         @if (request()->anyFilled(['search', 'status', 'priority', 'category', 'assigned_to']))
             <div class="col-12">
