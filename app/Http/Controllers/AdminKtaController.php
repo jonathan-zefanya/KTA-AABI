@@ -14,19 +14,43 @@ class AdminKtaController extends Controller
     public function index(Request $r)
     {
         $query = User::query()->whereNotNull('membership_card_number');
+
+        // Filter search keyword
         if($search = $r->get('q')){
             $query->where(function($q) use ($search){
                 $q->where('name','like','%'.$search.'%')
-                  ->orWhere('email','like','%'.$search.'%')
-                  ->orWhere('membership_card_number','like','%'.$search.'%');
+                ->orWhere('email','like','%'.$search.'%')
+                ->orWhere('membership_card_number','like','%'.$search.'%');
             });
         }
-        // Eager load companies; avoid ambiguous column by qualifying id (belongsToMany pivot)
+
+        // Filter bulan terbit
+        if($issuedMonth = $r->get('issued_month')){
+            $query->whereMonth('membership_card_issued_at', $issuedMonth);
+        }
+
+        // Filter bulan expired
+        if($expireMonth = $r->get('expire_month')){
+            $query->whereMonth('membership_card_expires_at', $expireMonth);
+        }
+
+        // Filter status
+        if($status = $r->get('status')){
+            if($status === 'active'){
+                $query->where('membership_card_expires_at', '>=', now());
+            } elseif($status === 'expired'){
+                $query->where('membership_card_expires_at', '<', now());
+            }
+        }
+
+        // Eager load companies
         $users = $query->with(['companies' => function($q){
             $q->select('companies.id','name');
         }])->orderBy('name')->paginate(25)->withQueryString();
+
         return view('admin.kta.index', compact('users'));
     }
+
 
     public function show(User $user, Request $r)
     {

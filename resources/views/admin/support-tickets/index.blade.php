@@ -101,6 +101,16 @@
                 @endforeach
             </select>
         </div>
+        <div class="col-md-3">
+            <label class="form-label small">Dari Tanggal</label>
+            <input type="date" name="created_from" value="{{ request('created_from') }}" class="form-control form-control-sm">
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label small">Sampai Tanggal</label>
+            <input type="date" name="created_to" value="{{ request('created_to') }}" class="form-control form-control-sm">
+        </div>
+
         <div class="col-lg-2 col-md-6">
             <label class="form-label small text-dim mb-1"><i class="bi bi-person-fill me-1"></i>Ditugaskan</label>
             <select name="assigned_to" class="form-select form-select-sm bg-dark border-secondary text-light">

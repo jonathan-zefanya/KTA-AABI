@@ -10,13 +10,37 @@ class SupportTicketController extends Controller
     /**
      * Display all support tickets for the current user
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tickets = auth()->user()->supportTickets()
-            ->latest()
-            ->paginate(15);
+        $query = SupportTicket::query()
+            ->with(['user', 'assignedAdmin']);
 
-        return view('support-tickets.index', compact('tickets'));
+        // Filter keyword
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $query->where(function ($w) use ($q) {
+                $w->where('subject', 'like', "%$q%")
+                ->orWhere('ticket_number', 'like', "%$q%")
+                ->orWhereHas('user', function ($u) use ($q) {
+                    $u->where('name', 'like', "%$q%");
+                });
+            });
+        }
+
+        $query->when($request->filled('created_from'), function ($q) use ($request) {
+            $q->whereDate('created_at', '>=', $request->created_from);
+        });
+
+        $query->when($request->filled('created_to'), function ($q) use ($request) {
+            $q->whereDate('created_at', '<=', $request->created_to);
+        });
+
+        $tickets = $query
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
+
+        return view('admin.support-tickets.index', compact('tickets'));
     }
 
     /**

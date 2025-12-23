@@ -65,21 +65,51 @@
 <!-- Search Section -->
 <div class="search-card">
     <form class="row g-3 align-items-center" method="get">
-        <div class="col-lg-6 col-md-8">
+        <div class="col-lg-4 col-md-6">
             <label class="form-label small text-dim mb-1"><i class="bi bi-search me-1"></i>Pencarian</label>
             <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari nama / email / no KTA" class="form-control form-control-sm bg-dark border-secondary text-light" />
         </div>
-        <div class="col-lg-6 col-md-4">
-            <label class="form-label small text-dim mb-1 d-block">&nbsp;</label>
-            <div class="d-flex gap-2">
-                <button class="btn btn-sm btn-primary"><i class="bi bi-search me-1"></i>Cari</button>
-                @if(request('q'))
-                    <a href="{{ route('admin.kta.index') }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-x-circle me-1"></i>Reset</a>
+
+        <div class="col-lg-2 col-md-6">
+            <label class="form-label small text-dim mb-1">Bulan Terbit</label>
+            <select name="issued_month" class="form-select form-select-sm">
+                <option value="">Semua</option>
+                @foreach(range(1,12) as $m)
+                    <option value="{{ $m }}" {{ request('issued_month') == $m ? 'selected' : '' }}>{{ DateTime::createFromFormat('!m',$m)->format('F') }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-lg-2 col-md-6">
+            <label class="form-label small text-dim mb-1">Bulan Expire</label>
+            <select name="expire_month" class="form-select form-select-sm">
+                <option value="">Semua</option>
+                @foreach(range(1,12) as $m)
+                    <option value="{{ $m }}" {{ request('expire_month') == $m ? 'selected' : '' }}>{{ DateTime::createFromFormat('!m',$m)->format('F') }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-lg-2 col-md-6">
+            <label class="form-label small text-dim mb-1">Status</label>
+            <select name="status" class="form-select form-select-sm">
+                <option value="">Semua</option>
+                <option value="active" {{ request('status')=='active' ? 'selected' : '' }}>Aktif</option>
+                <option value="expired" {{ request('status')=='expired' ? 'selected' : '' }}>Expired</option>
+            </select>
+        </div>
+
+        <div class="col-lg-2 col-md-6 d-flex align-items-end">
+            <div class="d-flex gap-2 w-100">
+                <button class="btn btn-sm btn-primary w-50"><i class="bi bi-search me-1"></i>Cari</button>
+                @if(request()->filled('q') || request()->filled('issued_month') || request()->filled('expire_month') || request()->filled('status'))
+                    <a href="{{ route('admin.kta.index') }}" class="btn btn-sm btn-outline-secondary w-50"><i class="bi bi-x-circle me-1"></i>Reset</a>
                 @endif
             </div>
         </div>
     </form>
 </div>
+
 <!-- Table Section -->
 <div class="adm-card">
     <div class="d-flex justify-content-between align-items-center mb-3">
