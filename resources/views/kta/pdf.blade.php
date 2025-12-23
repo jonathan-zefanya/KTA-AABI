@@ -3,7 +3,7 @@
     $isPreview = isset($preview) && $preview;
 
     // Get template path from settings
-    $templatePath = \App\Models\Setting::getValue('kta_template_path', 'img/kta_template.png');
+    $templatePath = \App\Models\Setting::getValue('kta_template_path', 'img/kta_depan.jpg');
 
     // Determine the full path (support uploads stored on public disk)
     if (str_starts_with($templatePath, 'uploads/')) {
@@ -104,13 +104,15 @@
         width:29.7cm;
         height:21.28cm;
         margin:0 auto;
-        page-break-after: always;
         @if($isPreview)
         box-shadow: 0 20px 60px rgba(0,0,0,0.15);
         border-radius: 8px;
         overflow: hidden;
         margin-bottom: 20px;
         @endif
+    }
+    .page:first-of-type {
+        page-break-after: always;
     }
     .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
     .layer{position:absolute;inset:0;}
@@ -119,11 +121,11 @@
     .member-box{
         position:absolute;
         left:2%;
-        top:1.7cm;
-        width:4.5cm;
+        top:1.8cm;
+        width:5.25cm;
         padding:0.3cm;
         font-weight:700;
-        font-size:16px;
+        font-size:21px;
         letter-spacing:1px;
         text-align:center;
         /* background:#fff; */
@@ -133,12 +135,13 @@
     /* Judul KARTU TANDA ANGGOTA */
     .title{
         position:absolute;
-        top:4.4cm;
+        top:4.6cm;
         left:55%;
-        font-weight:800;
-        font-size:14px;
+        font-weight:900;
+        font-size:16px;
         text-decoration:underline;
         z-index:10;
+        letter-spacing:1px;
     }
 
     /* Data perusahaan - table format */
@@ -155,12 +158,15 @@
         border-collapse: collapse;
         width: 100%;
         border: none;
+        /* buat agak ke kiri */
+        margin-left: -2.5cm;
     }
     .meta table td {
         border: none;
         padding: 0.25cm 0.2cm;
         vertical-align: top;
-        line-height: 1.5;
+        line-height: 1.2;
+        font-size:15px;
     }
     .meta table td:first-child {
         font-weight: 700;
@@ -173,7 +179,7 @@
     }
     .meta table td:last-child {
         word-break: break-word;
-        font-size:10px;
+        font-size:15px;
     }
 
     /* Pas Foto */
@@ -221,7 +227,6 @@
         width:3.8cm;
         height:3.8cm;;
         padding: 0.4cm;
-        background:#fff;
         display:flex;
         align-items:center;
         justify-content:center; 
@@ -246,13 +251,13 @@
     .expiry{
         position:absolute;
         left:33%;
-        top:13.5cm;
+        top:14.1cm;
         width:18cm;
         padding:0.3cm 0.4cm;
         /* background:#fff; */
-        font-weight:700;
-        font-size:10px;
-        line-height:1.4;
+        font-weight:800;
+        font-size:15px;
+        line-height:1.8;
         text-align:center;
         z-index:10;
     }
@@ -337,44 +342,99 @@
 
         <!-- Masa Berlaku -->
         <div class="expiry">
-            BERLAKU SAMPAI DENGAN TANGGAL<br>{{ optional($user->membership_card_expires_at)->format('d F Y') }}
+            BERLAKU SAMPAI DENGAN TANGGAL {{ $user->membership_card_expires_at ? strtoupper($user->membership_card_expires_at->locale('id')->translatedFormat('d F Y')) : '' }}
+            <br>JAKARTA, {{ $user->membership_card_issued_at ? strtoupper($user->membership_card_issued_at->locale('id')->translatedFormat('d F Y')) : strtoupper(now()->locale('id')->translatedFormat('d F Y')) }}
         </div>
     </div>
 </div>
 
-<!-- HALAMAN KEDUA - DAFTAR AMP & CBP -->
+<!-- HALAMAN KEDUA - AMP & CBP (SATU HALAMAN) -->
 <div class="page">
     @if($backBase64)
         <img class="bg" src="{{ $backBase64 }}" alt="bg-back">
     @endif
-    <div class="layer">
-        <!-- Lokasi AMP Section -->
-        <div style="position:absolute;top:4.5cm;left:1.5cm;right:1.5cm;">
-            <div style="font-weight:700;font-size:13px;margin-bottom:0.3cm;">Lokasi <i>Asphalt Mixing Plant</i></div>
-            @if($ampAddresses->count())
-                @foreach($ampAddresses as $idx => $plant)
-                <div style="font-size:11px;margin:0.15cm 0;line-height:1.4;">
-                    <span style="font-weight:600;">{{ $idx + 1 }}.</span> {{ $plant->address }}
-                </div>
-                @endforeach
-            @else
-                <div style="font-size:11px;color:#999;margin:0.15cm 0;">Tidak ada data AMP terdaftar</div>
-            @endif
-        </div>
 
-        <!-- Lokasi CBP Section -->
-        <div style="position:absolute;top:9cm;left:1.5cm;right:1.5cm;">
-            <div style="font-weight:700;font-size:13px;margin-bottom:0.3cm;">Lokasi <i>Concrete Batching Plant</i></div>
-            @if($cbpAddresses->count())
-                @foreach($cbpAddresses as $idx => $plant)
-                <div style="font-size:11px;margin:0.15cm 0;line-height:1.4;">
-                    <span style="font-weight:600;">{{ $idx + 1 }}.</span> {{ $plant->address }}
+    <div class="layer" style="padding:5.5cm 1.5cm 2cm 1.5cm;">
+
+        {{-- ================= AMP ================= --}}
+        @if($ampAddresses->count())
+            <div style="margin-bottom:1.2cm;">
+                <div style="
+                    font-weight:700;
+                    font-size:15px;
+                    margin-bottom:0.2cm;
+                    text-decoration:underline;
+                    color:#000;
+                ">
+                    Lokasi <i>Asphalt Mixing Plant</i> (AMP)
                 </div>
-                @endforeach
-            @else
-                <div style="font-size:11px;color:#999;margin:0.15cm 0;">Tidak ada data CBP terdaftar</div>
-            @endif
-        </div>
+
+                <div style="
+                    column-count:{{ $ampAddresses->count() > 6 ? 2 : 1 }};
+                    column-gap:1.2cm;
+                ">
+                    @foreach($ampAddresses as $idx => $plant)
+                        <div style="
+                            font-size:13px;
+                            margin:0.2cm 0;
+                            line-height:1.5;
+                            break-inside:avoid;
+                            page-break-inside:avoid;
+                        ">
+                            <strong>{{ $idx + 1 }}.</strong>
+                            {{ $plant->address }}
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        {{-- ================= CBP ================= --}}
+        @if($cbpAddresses->count())
+            <div>
+                <div style="
+                    font-weight:700;
+                    font-size:15px;
+                    margin-bottom:0.2cm;
+                    text-decoration:underline;
+                    color:#000;
+                ">
+                    Lokasi <i>Concrete Batching Plant</i> (CBP)
+                </div>
+
+                <div style="
+                    column-count:{{ $cbpAddresses->count() > 6 ? 2 : 1 }};
+                    column-gap:1.2cm;
+                ">
+                    @foreach($cbpAddresses as $idx => $plant)
+                        <div style="
+                            font-size:13px;
+                            margin:0.2cm 0;
+                            line-height:1.5;
+                            break-inside:avoid;
+                            page-break-inside:avoid;
+                        ">
+                            <strong>{{ $idx + 1 }}.</strong>
+                            {{ $plant->address }}
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        {{-- ================= EMPTY STATE ================= --}}
+        @if(!$ampAddresses->count() && !$cbpAddresses->count())
+            <div style="
+                text-align:center;
+                margin-top:4cm;
+                font-size:14px;
+                font-style:italic;
+                color:#777;
+            ">
+                Tidak ada data lokasi plant terdaftar
+            </div>
+        @endif
+
     </div>
 </div>
 </body>
