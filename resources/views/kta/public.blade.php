@@ -81,18 +81,17 @@
    background:linear-gradient(to bottom,rgba(13,71,154,.02),transparent);
  }
  .logo{
-   width:80px;
+   width:auto;
    height:80px;
    margin:0 auto 20px;
-   background:#0d479a;
-   border-radius:50%;
    display:flex;
    align-items:center;
    justify-content:center;
-   font-size:32px;
-   font-weight:bold;
-   color:#fff;
-   box-shadow:0 4px 12px rgba(13,71,154,.3);
+ }
+ .logo img{
+   height:80px;
+   width:auto;
+   object-fit:contain;
  }
  h1{
    font-size:36px;
@@ -277,7 +276,7 @@
     <div class="watermark">KTA</div>
     
     <header>
-      <div class="logo">KTA</div>
+      <div class="logo"><img src="{{ asset('img/Logo_AABI.jpg') }}" alt="Logo AABI"></div>
       <h1>Sertifikat Validasi</h1>
       <div class="subtitle">Kartu Tanda Anggota</div>
       <div class="status {{ $isValid ? 'valid':'expired' }}">

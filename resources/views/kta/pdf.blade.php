@@ -148,9 +148,9 @@
     /* Data perusahaan - table format */
     .meta{
         position:absolute;
-        left:40%;
-        top:5.2cm;
-        width:23cm;
+        left:7.5cm;
+        top:6.5cm;
+        width:18cm;
         font-size:11px;
         line-height:1.3;
         z-index:5;
@@ -159,30 +159,33 @@
         border-collapse: collapse;
         width: 100%;
         border: none;
-        /* buat agak ke kiri */
-        margin-left: -2.5cm;
-        /* buat agak kebawah */
-        margin-top: 1.1cm;
+        margin: 0;
     }
     .meta table td {
         border: none;
-        padding: 0.25cm 0.2cm;
+        padding: 0.2cm 0.3cm;
         vertical-align: top;
         line-height: 1.2;
-        font-size:15px;
+        font-size:13px;
+        
     }
+
     .meta table td:first-child {
         font-weight: 700;
-        width: 4cm;
+        width: 3.5cm;
         white-space: nowrap;
+        font-size:14px;
+        padding-left: 2.5cm;
     }
     .meta table td:nth-child(2) {
-        width: 0.4cm;
+        width: 0.3cm;
         text-align: center;
+        font-size:12px;
     }
     .meta table td:last-child {
         word-break: break-word;
-        font-size:15px;
+        font-size:12px;
+        max-width:14cm;
     }
 
     /* Pas Foto */

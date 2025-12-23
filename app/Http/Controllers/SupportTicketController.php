@@ -83,9 +83,14 @@ class SupportTicketController extends Controller
      */
     public function show(SupportTicket $supportTicket)
     {
+        // Ensure user is authenticated
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
         // Ensure user can only view their own tickets
-        if ($supportTicket->user_id !== auth()->id()) {
-            abort(403);
+        if ((int)$supportTicket->user_id !== (int)auth()->id()) {
+            abort(403, 'Anda tidak diizinkan mengakses tiket ini.');
         }
 
         return view('support-tickets.show', compact('supportTicket'));
